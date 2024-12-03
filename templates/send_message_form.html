@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Эҷоди Паёми Нав</title>
+</head>
+<body>
+    <h1>Эҷоди Паёми Нав</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Матни Паём:</label><br>
+        <textarea name="message"></textarea><br>
+
+        <label>ID-и Telegram (chat_id):</label><br>
+        <input type="text" name="chat_id"><br>
+
+        <label>Акс (ихтиёрӣ):</label><br>
+        <input type="file" name="image"><br>
+
+        <label>Фиристанда:</label><br>
+        <select name="sent_by">
+            {% for teacher in teachers %}
+            <option value="{{ teacher.id }}">{{ teacher.f_name }} {{ teacher.l_name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <button type="submit">Фиристодан</button>
+    </form>
+</body>
+</html>

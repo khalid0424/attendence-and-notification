@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Тафсилоти Паём</title>
+</head>
+<body>
+    <h1>Тафсилоти Паём</h1>
+    <p><strong>Паём:</strong> {{ message.message }}</p>
+    <p><strong>Сана:</strong> {{ message.time }}</p>
+    {% if message.image %}
+    <p><strong>Акс:</strong><br>
+        <img src="{{ message.image.url }}" alt="Image" style="max-width: 400px;">
+    </p>
+    {% endif %}
+    <a href="{% url 'send_message_list' %}">Бозгашт ба рӯйхат</a>
+</body>
+</html>

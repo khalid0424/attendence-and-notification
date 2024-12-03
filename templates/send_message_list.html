@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Рӯйхати Паёмҳо</title>
+</head>
+<body>
+    <h1>Рӯйхати Паёмҳо</h1>
+    <a href="{% url 'send_message_create' %}">Эҷоди Паёми Нав</a>
+    <ul>
+        {% for message in messages_list %}
+        <li>
+            <strong>Паём:</strong> {{ message.message }}<br>
+            <strong>Сана:</strong> {{ message.time }}<br>
+            <a href="{% url 'send_message_detail' message.id %}">Тафсилот</a>
+            <a href="{% url 'send_message_delete' message.id %}">Ҳазф</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
