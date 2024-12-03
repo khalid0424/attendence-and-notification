@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}Список студентов{% endblock %}
+
+{% block content %}
+<div class="card fade-in">
+    <div class="card-header">
+        <h2>Список студентов</h2>
+    </div>
+    <div class="card-body">
+        <!-- Фильтры -->
+        <form method="get" class="row g-3 mb-4">
+            <div class="col-md-3">
+                <input type="text" name="search" class="form-control" placeholder="Поиск по имени..." value="{{ search_query }}">
+            </div>
+            <div class="col-md-3">
+                <select name="class_id" class="form-select">
+                    <option value="">Все классы</option>
+                    {% for class in classes %}
+                        <option value="{{ class.id }}" {% if selected_class == class.id|stringformat:"s" %}selected{% endif %}>
+                            {{ class.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="subject_id" class="form-select">
+                    <option value="">Все предметы</option>
+                    {% for subject in subjects %}
+                        <option value="{{ subject.id }}" {% if selected_subject == subject.id|stringformat:"s" %}selected{% endif %}>
+                            {{ subject.name_subject }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">Применить фильтры</button>
+            </div>
+        </form>
+
+        <!-- Таблица студентов -->
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Фамилия</th>
+                        <th>Username</th>
+                        <th>Telegram ID</th>
+                        <th>Классы</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr class="fade-in">
+                        <td>{{ student.f_name }}</td>
+                        <td>{{ student.l_name }}</td>
+                        <td>{{ student.username }}</td>
+                        <td>{{ student.telegram_id }}</td>
+                        <td>
+                            {% for class in student.class_id.all %}
+                                <span class="badge bg-info">{{ class.name }}</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% if student.is_active %}
+                                <span class="badge bg-success">Активный</span>
+                            {% else %}
+                                <span class="badge bg-danger">Неактивный</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary edit-student" data-id="{{ student.id }}" 
+                                    data-fname="{{ student.f_name }}" 
+                                    data-lname="{{ student.l_name }}"
+                                    data-username="{{ student.username }}"
+                                    data-classes="{{ student.class_id.all|join:',' }}"
+                                    data-active="{{ student.is_active }}">
+                                Редактировать
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">Студенты не найдены</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования -->
+<div class="modal fade" id="editStudentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Редактировать студента</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editStudentForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="student_id" id="edit_student_id">
+                    <div class="mb-3">
+                        <label class="form-label">Имя</label>
+                        <input type="text" name="f_name" id="edit_f_name" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Фамилия</label>
+                        <input type="text" name="l_name" id="edit_l_name" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" id="edit_username" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Классы</label>
+                        <select name="class_id" id="edit_class_id" class="form-select" multiple>
+                            {% for class in classes %}
+                                <option value="{{ class.id }}">{{ class.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="is_active" id="edit_is_active">
+                            <label class="form-check-label">Активный</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Открытие модального окна редактирования
+    $('.edit-student').click(function() {
+        const studentId = $(this).data('id');
+        const fname = $(this).data('fname');
+        const lname = $(this).data('lname');
+        const username = $(this).data('username');
+        const classes = $(this).data('classes').split(',');
+        const isActive = $(this).data('active');
+
+        $('#edit_student_id').val(studentId);
+        $('#edit_f_name').val(fname);
+        $('#edit_l_name').val(lname);
+        $('#edit_username').val(username);
+        $('#edit_class_id').val(classes);
+        $('#edit_is_active').prop('checked', isActive === 'True');
+
+        $('#editStudentModal').modal('show');
+    });
+
+    // Обработка формы редактирования
+    $('#editStudentForm').submit(function(e) {
+        e.preventDefault();
+        const studentId = $('#edit_student_id').val();
+        
+        $.ajax({
+            url: `/update-student/${studentId}/`,
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.status === 'success') {
+                    $('#editStudentModal').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function(xhr) {
+                alert('Произошла ошибка при сохранении');
+            }
+        });
+    });
+
+    // Анимации при наведении
+    $('tr').hover(
+        function() {
+            $(this).addClass('animate__animated animate__pulse');
+        },
+        function() {
+            $(this).removeClass('animate__animated animate__pulse');
+        }
+    );
+
+    // Автоматическое применение фильтров при изменении селектов
+    $('select[name="class_id"], select[name="subject_id"]').change(function() {
+        $(this).closest('form').submit();
+    });
+});
+</script>
+{% endblock %}

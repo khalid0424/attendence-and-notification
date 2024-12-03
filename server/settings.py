@@ -85,7 +85,7 @@ from secret import PASSWORD
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'attendens_db',
+        'NAME': 'attendens_db1',
         'USER': 'postgres',  
         'PASSWORD': PASSWORD, 
         'HOST': 'localhost',  

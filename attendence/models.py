@@ -56,11 +56,7 @@ class SendMessage(models.Model):
     image = models.ImageField(upload_to='static/images', null=True, blank=True)  
     message = models.TextField(null=True, blank=True)  
     time = models.DateTimeField(auto_now=True, auto_now_add=False)
-    chat_id = models.CharField(max_length=999999999999999999999999, null=True, blank=True)
-    sent_by = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True) 
-    history = models.BooleanField(default=False) 
-
-    
+    chat_id = models.CharField(max_length=250, null=True, blank=True)
     def __str__(self):
         return f"{self.id}"
 

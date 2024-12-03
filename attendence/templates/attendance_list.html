@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Учет посещаемости{% endblock %}
+
+{% block content %}
+<div class="card fade-in">
+    <div class="card-header">
+        <h2>Учет посещаемости</h2>
+    </div>
+    <div class="card-body">
+        <form id="attendanceForm" class="mb-4">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+                    <select class="form-select" name="student_id" required>
+                        <option value="">Выберите студента</option>
+                        {% for student in students %}
+                            <option value="{{ student.id }}">{{ student.f_name }} {{ student.l_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="status" required>
+                        <option value="">Выберите статус</option>
+                        <option value="present">Присутствует</option>
+                        <option value="absent">Отсутствует</option>
+                        <option value="late">Опоздал</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="comment" placeholder="Комментарий">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Отметить</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Студент</th>
+                        <th>Статус</th>
+                        <th>Время</th>
+                        <th>Комментарий</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendance in attendances %}
+                    <tr class="fade-in">
+                        <td>{{ attendance.user.f_name }} {{ attendance.user.l_name }}</td>
+                        <td>
+                            {% if attendance.omad %}
+                                <span class="badge bg-success">Присутствует</span>
+                            {% elif attendance.dercard %}
+                                <span class="badge bg-danger">Отсутствует</span>
+                            {% elif attendance.raft %}
+                                <span class="badge bg-warning">Опоздал</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if attendance.attended_time %}
+                                {{ attendance.attended_time|date:"d.m.Y H:i" }}
+                            {% elif attendance.missed_time %}
+                                {{ attendance.missed_time|date:"d.m.Y H:i" }}
+                            {% elif attendance.timeout_time %}
+                                {{ attendance.timeout_time|date:"d.m.Y H:i" }}
+                            {% endif %}
+                        </td>
+                        <td>{{ attendance.comment|default:"-" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">Нет записей о посещаемости</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('#attendanceForm').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/mark-attendance/',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.status === 'success') {
+                    location.reload();
+                }
+            },
+            error: function() {
+                alert('Произошла ошибка при сохранении');
+            }
+        });
+    });
+
+    $('tr').hover(
+        function() {
+            $(this).addClass('animate__animated animate__pulse');
+        },
+        function() {
+            $(this).removeClass('animate__animated animate__pulse');
+        }
+    );
+});
+</script>
+{% endblock %}

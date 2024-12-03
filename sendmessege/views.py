@@ -7,7 +7,6 @@ from django.contrib import messages
 
 
 def send_message_list(request):
-    
     messages_list = SendMessage.objects.all().order_by('-time')
     return render(request, 'send_message_list.html', {'messages_list': messages_list})
 
