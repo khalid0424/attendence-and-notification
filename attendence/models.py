@@ -56,7 +56,7 @@ class SendMessage(models.Model):
     image = models.ImageField(upload_to='static/images')
     message = models.TextField()
     time = models.DateTimeField(auto_now=True, auto_now_add=False)
-    user_id = models.CharField(max_length=50)
+    chat_id = models.CharField(max_length=50)
     
     def __str__(self):
         return f"{self.id}"
