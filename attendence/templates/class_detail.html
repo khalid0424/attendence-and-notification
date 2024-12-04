@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">{{ class.name }}</h3>
+                <div>
+                    <a href="{% url 'class_update' class.id %}" class="btn btn-primary">Редактировать</a>
+                    <a href="{% url 'class_delete' class.id %}" class="btn btn-danger">Удалить</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Информация о классе</h5>
+                    <p><strong>Курс:</strong> {{ class.subject.name_subject }}</p>
+                    <p><strong>Преподаватель:</strong> {{ class.subject.teacher.f_name }} {{ class.subject.teacher.l_name }}</p>
+                    <p><strong>Всего студентов:</strong> {{ total_students }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Посещаемость сегодня</h5>
+                    <div class="row text-center">
+                        <div class="col">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h3>{{ today_attendance.present }}</h3>
+                                    <p class="mb-0">Присутствуют</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body">
+                                    <h3>{{ today_attendance.late }}</h3>
+                                    <p class="mb-0">Опоздали</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <h3>{{ today_attendance.absent }}</h3>
+                                    <p class="mb-0">Отсутствуют</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Список студентов</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Имя</th>
+                            <th>Фамилия</th>
+                            <th>Статус сегодня</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.f_name }}</td>
+                            <td>{{ student.l_name }}</td>
+                            <td>
+                                {% if student.today_status %}
+                                    {% if student.today_status.omad %}
+                                        <span class="badge bg-success">Присутствует</span>
+                                    {% elif student.today_status.dercard %}
+                                        <span class="badge bg-warning">Опоздал</span>
+                                    {% else %}
+                                        {% if student.today_status.comment %}
+                                            <span class="badge bg-danger">Отсутствует (подтверждено)</span>
+                                            <small class="d-block text-muted">{{ student.today_status.comment }}</small>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Предварительно отсутствует</span>
+                                        {% endif %}
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary">Не отмечен</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center">В этом классе нет студентов</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

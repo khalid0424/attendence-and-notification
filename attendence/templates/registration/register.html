@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                <div class="card-header">
+                    <h3 class="text-center font-weight-light my-4">Регистрация</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="username" name="username" type="text" placeholder="Имя пользователя" required />
+                            <label for="username">Имя пользователя</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="password1" name="password1" type="password" placeholder="Пароль" required />
+                            <label for="password1">Пароль</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="password2" name="password2" type="password" placeholder="Подтверждение пароля" required />
+                            <label for="password2">Подтверждение пароля</label>
+                        </div>
+                        <div class="mt-4 mb-0">
+                            <div class="d-grid">
+                                <button class="btn btn-primary btn-block" type="submit">Зарегистрироваться</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small">
+                        <a href="{% url 'login' %}">Уже есть аккаунт? Войти</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

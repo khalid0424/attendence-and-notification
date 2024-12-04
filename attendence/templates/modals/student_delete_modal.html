@@ -1,0 +1,79 @@
+<!-- Удаление студента -->
+<div class="modal fade" id="deleteStudentModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Удалить студента
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="deleteStudentForm" method="POST">
+                {% csrf_token %}
+                <div class="modal-body text-center py-4">
+                    <div class="delete-animation mb-4">
+                        <i class="fas fa-user-times text-danger fa-4x mb-3 animate__animated animate__fadeIn"></i>
+                    </div>
+                    <p class="lead mb-1">Вы действительно хотите удалить студента</p>
+                    <h4 class="fw-bold text-danger mb-4" id="deleteStudentName"></h4>
+                    
+                    <div class="alert alert-warning border-warning mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-exclamation-circle text-warning fa-2x me-3"></i>
+                            <div class="text-start">
+                                <h6 class="fw-bold mb-1">Внимание!</h6>
+                                <p class="mb-0">Это действие нельзя будет отменить. Будут удалены:</p>
+                                <ul class="mb-0 mt-2">
+                                    <li>Личные данные студента</li>
+                                    <li>История посещаемости</li>
+                                    <li>Связи с курсами</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Подтверждение -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                        <label class="form-check-label" for="confirmDelete">
+                            Я понимаю последствия удаления
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>
+                        Отмена
+                    </button>
+                    <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fas fa-trash-alt me-1"></i>
+                        Удалить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteModal = document.getElementById('deleteStudentModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const studentId = button.getAttribute('data-student-id');
+            const studentName = button.getAttribute('data-student-name');
+            
+            const form = this.querySelector('#deleteStudentForm');
+            const nameElement = this.querySelector('#deleteStudentName');
+            
+            form.action = `/student/${studentId}/delete/`;
+            nameElement.textContent = studentName;
+            
+            // Сброс чекбокса при каждом открытии
+            document.getElementById('confirmDelete').checked = false;
+        });
+    }
+});
+</script>

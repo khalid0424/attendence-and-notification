@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class Teacher(models.Model):
     f_name = models.CharField(max_length=150, null=True)
     l_name = models.CharField(max_length=150, null=True)
@@ -44,8 +43,10 @@ class Attendens(models.Model):
     omad = models.BooleanField(default=False, null=True)
     raft = models.BooleanField(default=False, null=True)
     dercard = models.BooleanField(default=False, null=True)
+    is_late = models.BooleanField(default=False, null=True)
     created_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True, null=True)
+    confirmed = models.BooleanField(default=False)  
 
     def __str__(self):
         return f"{self.user.__str__}"
@@ -58,5 +59,4 @@ class SendMessage(models.Model):
     time = models.DateTimeField(auto_now=True, auto_now_add=False)
     chat_id = models.CharField(max_length=250, null=True, blank=True)
     def __str__(self):
-        return f"{self.id}"
-
+        return f"{self.id}" 

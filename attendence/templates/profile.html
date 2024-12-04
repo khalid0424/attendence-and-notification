@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 150px; height: 150px; font-size: 64px;">
+                        {{ user.username|make_list|first|upper }}
+                    </div>
+                    <h5 class="my-3">{{ user.get_full_name }}</h5>
+                    <p class="text-muted mb-4">{{ user.email }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Редактировать профиль</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'edit_profile' %}">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label class="form-label">Имя</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label class="form-label">Фамилия</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label class="form-label">Email</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control" name="email" value="{{ user.email }}">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label class="form-label">Текущий пароль</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" name="current_password">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <label class="form-label">Новый пароль</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" name="new_password">
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% if messages %}
+            <div class="alert alert-info">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

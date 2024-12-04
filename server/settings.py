@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'attendence.apps.AttendenceConfig',
+    'attendence',
+    'sendmessege',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -93,8 +95,10 @@ DATABASES = {
     }
 }
 
-
-
+# Authentication settings
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'student_list'
+LOGOUT_REDIRECT_URL = 'login'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -131,6 +135,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Cache settings
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Время начала учебного дня
+SCHOOL_START_HOUR = 8  # 8:00 утра
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

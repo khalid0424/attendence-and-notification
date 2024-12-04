@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Классы</h2>
+        <div>
+            <a href="{% url 'course_create' %}" class="btn btn-success me-2">Создать курс</a>
+            <a href="{% url 'class_create' %}" class="btn btn-primary">Создать класс</a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Поиск по названию..." value="{{ search }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="subject" class="form-select">
+                        <option value="">Все курсы</option>
+                        {% for subject in subjects %}
+                            <option value="{{ subject.id }}" {% if selected_subject == subject.id|stringformat:"s" %}selected{% endif %}>
+                                {{ subject.name_subject }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="teacher" class="form-select">
+                        <option value="">Все преподаватели</option>
+                        {% for teacher in teachers %}
+                            <option value="{{ teacher.id }}" {% if selected_teacher == teacher.id|stringformat:"s" %}selected{% endif %}>
+                                {{ teacher.f_name }} {{ teacher.l_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Фильтр</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for class in classes %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ class.name }}</h5>
+                    <p class="card-text">
+                        <strong>Время:</strong> {{ class.time }}<br>
+                        <strong>Курсы:</strong><br>
+                        {% for subject in class.subject.all %}
+                            - {{ subject.name_subject }}<br>
+                            {% for teacher in subject.teacher.all %}
+                                &nbsp;&nbsp;Преподаватель: {{ teacher.f_name }} {{ teacher.l_name }}<br>
+                            {% endfor %}
+                        {% endfor %}
+                        <strong>Студентов:</strong> {{ class.student_set.count }}<br>
+                    </p>
+                    
+                    {% if class.today_stats %}
+                    <div class="mt-3">
+                        <h6>Посещаемость сегодня:</h6>
+                        <div class="d-flex justify-content-between text-center">
+                            <div>
+                                <span class="badge bg-success">{{ class.today_stats.present }}</span>
+                                <small class="d-block">Присутствуют</small>
+                            </div>
+                            <div>
+                                <span class="badge bg-warning">{{ class.today_stats.late }}</span>
+                                <small class="d-block">Опоздали</small>
+                            </div>
+                            <div>
+                                <span class="badge bg-danger">{{ class.today_stats.absent }}</span>
+                                <small class="d-block">Отсутствуют</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group w-100">
+                        <a href="{% url 'class_detail' class.id %}" class="btn btn-info">Детали</a>
+                        <a href="{% url 'class_update' class.id %}" class="btn btn-primary">Изменить</a>
+                        <a href="{% url 'class_delete' class.id %}" class="btn btn-danger">Удалить</a>
+                        <a href="{% url 'class_students' class.id %}" class="btn btn-success">Студенты</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                Классы не найдены. <a href="{% url 'class_create' %}" class="alert-link">Создать новый класс</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if selected_teacher %}&teacher={{ selected_teacher }}{% endif %}">Предыдущая</a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if selected_teacher %}&teacher={{ selected_teacher }}{% endif %}">{{ num }}</a>
+                </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if selected_teacher %}&teacher={{ selected_teacher }}{% endif %}">Следующая</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
