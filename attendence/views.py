@@ -10,12 +10,17 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 from django.views.generic.edit import FormView
 from django.contrib.auth.models import User
-from .models import Student, Class, Teacher, Attendens, Subject
+from .models import Student, Class, Teacher, Attendens, Subject, TelegramGroup2, SendMessage
 from django.utils import timezone
 import csv
 from datetime import datetime, timedelta
 from functools import wraps
 from googletrans import Translator
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .telegram_bot_updated import send_notification
+from django.views.decorators.csrf import csrf_protect
 
 def require_ajax(view_func):
     def wrapper(request, *args, **kwargs):
@@ -51,7 +56,7 @@ class AttendanceListView(LoginRequiredMixin, ListView):
         elif status == 'absent':
             queryset = queryset.filter(omad=False)
         elif status == 'late':
-            queryset = queryset.filter(dercard=True)
+            queryset = queryset.filter(Q(is_late=True) | Q(dercard=True))
 
         return queryset
 
@@ -68,12 +73,17 @@ class AttendanceListView(LoginRequiredMixin, ListView):
             ).distinct()
             
             student_stats = []
+            today = timezone.now().date()
             
             for student in students:
-                total = Attendens.objects.filter(user=student)
+                total = Attendens.objects.filter(
+                    user=student,
+                    created_at__date=today
+                )
+                
                 present = total.filter(omad=True).count()
-                absent = total.filter(omad=False).count()
-                late = total.filter(dercard=True).count()
+                absent = total.filter(Q(omad=False) & Q(is_late=False) & Q(dercard=False)).count()
+                late = total.filter(Q(is_late=True) | Q(dercard=True)).count()
                 
                 all_days = present + absent + late
                 percent = (present / all_days * 100) if all_days > 0 else 0
@@ -87,27 +97,22 @@ class AttendanceListView(LoginRequiredMixin, ListView):
                 })
             
             context['student_stats'] = student_stats
-            
-            total_students = students.count()
             today = timezone.now().date()
-            latest_attendance = {}
-            for attendance in Attendens.objects.filter(
+            today_attendance = Attendens.objects.filter(
                 user__in=students,
                 created_at__date=today
-            ).order_by('user', '-created_at'):
-                if attendance.user_id not in latest_attendance:
-                    latest_attendance[attendance.user_id] = attendance
-            
-            today_present = sum(1 for att in latest_attendance.values() if att.omad)
-            today_late = sum(1 for att in latest_attendance.values() if att.dercard)  # Все, кто отметил опоздание
-            today_absent = sum(1 for att in latest_attendance.values() if not att.omad)  # Все, кто не отметился как пришедший
-            students_without_attendance = total_students - len(latest_attendance)
-            today_absent += students_without_attendance
+            )
+            present_count = today_attendance.filter(omad=True).count()
+            late_count = today_attendance.filter(Q(is_late=True) | Q(dercard=True)).count()
+            total_students = students.count()
+            absent_count = total_students - present_count
+            if absent_count < 0:
+                absent_count = 0
             
             context['today_stats'] = {
-                'present': today_present,
-                'absent': today_absent,
-                'late': today_late,
+                'present': present_count,
+                'absent': absent_count,
+                'late': late_count,
                 'total_students': total_students
             }
         
@@ -574,3 +579,28 @@ class ClassDetailView(LoginRequiredMixin, DetailView):
             student.today_status = latest_attendance.get(student.id)
         
         return context
+
+@login_required
+@csrf_protect
+def send_message_view(request):
+    groups = TelegramGroup2.objects.filter(is_active=True)
+    
+    if request.method == 'POST':
+        message_text = request.POST.get('message')
+        image = request.FILES.get('image')
+        try:
+            message_obj = SendMessage(
+                message=message_text,
+                image=image if image else None
+            )
+            message_obj.save()
+            send_notification(message_obj)
+            messages.success(request, 'Сообщение успешно отправлено во все активные группы!')
+            return redirect('send_message')
+        except Exception as e:
+            messages.error(request, f'Ошибка при отправке сообщения: {str(e)}')
+    
+    context = {
+        'groups': groups
+    }
+    return render(request, 'send_message.html', context)

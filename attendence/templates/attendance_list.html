@@ -252,7 +252,7 @@
                             <td>
                                 {% if attendance.omad %}
                                     <span class="badge bg-success">Присутствует</span>
-                                {% elif attendance.dercard %}
+                                {% elif attendance.is_late or attendance.dercard %}
                                     <span class="badge bg-warning">Опоздал</span>
                                 {% else %}
                                     <span class="badge bg-danger">Отсутствует</span>

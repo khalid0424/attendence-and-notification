@@ -14,14 +14,10 @@ urlpatterns = [
     path('student/<int:student_id>/delete/', StudentDeleteView.as_view(), name='delete_student'),
     path('attendance/', AttendanceListView.as_view(), name='attendance_list'),
     path('teachers/', TeacherListView.as_view(), name='teacher_list'),
-    
-    # URLs для курсов
     path('courses/', CourseListView.as_view(), name='course_list'),
     path('courses/create/', CourseCreateView.as_view(), name='course_create'),
     path('courses/<int:pk>/update/', CourseUpdateView.as_view(), name='course_update'),
-    path('courses/<int:pk>/delete/', CourseDeleteView.as_view(), name='course_delete'),
-
-    # URLs для классов
+    path('courses/<int:pk>/delete/', CourseDeleteView.as_view(), name='course_delete'), 
     path('classes/', ClassListView.as_view(), name='class_list'),
     path('classes/create/', ClassCreateView.as_view(), name='class_create'),
     path('classes/<int:pk>/update/', ClassUpdateView.as_view(), name='class_update'),
@@ -29,4 +25,5 @@ urlpatterns = [
     path('classes/<int:pk>/', ClassDetailView.as_view(), name='class_detail'),
     path('class/<int:class_id>/students/', ClassStudentManageView.as_view(), name='class_students'),
     path('translate/', TranslateView.as_view(), name='translate'),
+    # path('send-message/', send_message_view, name='send_message'),
 ]

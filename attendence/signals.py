@@ -4,6 +4,23 @@ from django.utils import timezone
 from django.core.cache import cache
 from django.conf import settings
 from .models import Student, Attendens
+# signals.py
+from django.db.models.signals import m2m_changed
+from django.dispatch import receiver
+from django.utils import timezone
+from .models import Student, Attendens
+
+@receiver(m2m_changed, sender=Student.class_id.through)
+def create_attendens_on_class_add(sender, instance, action, **kwargs):
+    if action == 'post_add':  
+        for class_instance in instance.class_id.all():
+            Attendens.objects.create(
+                user=instance,  
+                omad=False,
+                created_at=timezone.now(),
+                is_active=True,
+                confirmed=False
+            )
 
 def mark_students_absent():
     current_date = timezone.now().date()
@@ -26,5 +43,5 @@ def mark_students_absent():
                 omad=False,
                 created_at=timezone.now(),
                 is_active=True,
-                confirmed=False  # Не подтверждено через бот
+                confirmed=False 
             )

@@ -1,5 +1,13 @@
 from django.apps import AppConfig
 from django.utils import timezone
+# apps.py
+from django.apps import AppConfig
+
+class AttendenceConfig(AppConfig):
+    name = 'attendence'
+
+    def ready(self):
+        import attendence.signals  # Подключаем сигналы
 
 class AttendenceConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
