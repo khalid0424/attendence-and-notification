@@ -588,19 +588,28 @@ def send_message_view(request):
     if request.method == 'POST':
         message_text = request.POST.get('message')
         image = request.FILES.get('image')
+        
+        if not message_text and not image:
+            messages.error(request, 'Необходимо указать сообщение или загрузить изображение')
+            return redirect('send_message')
+            
         try:
             message_obj = SendMessage(
                 message=message_text,
                 image=image if image else None
             )
             message_obj.save()
+            
+            # Отправляем сообщение через бота
             send_notification(message_obj)
+            
             messages.success(request, 'Сообщение успешно отправлено во все активные группы!')
             return redirect('send_message')
         except Exception as e:
             messages.error(request, f'Ошибка при отправке сообщения: {str(e)}')
     
     context = {
-        'groups': groups
+        'groups': groups,
+        'active_page': 'send_message'  # Для подсветки активного пункта меню
     }
     return render(request, 'send_message.html', context)
