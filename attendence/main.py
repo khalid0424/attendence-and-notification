@@ -11,7 +11,7 @@ Soft_lat = 38.56401624794034
 Soft_lon = 68.75892534477292
 
 def calculate_distance(lat1, lon1, lat2, lon2):
-    R = 6371000
+    R = 50
     phi1 = radians(lat1)
     phi2 = radians(lat2)
     delta_phi = radians(lat2 - lat1)

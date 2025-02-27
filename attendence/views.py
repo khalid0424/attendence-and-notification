@@ -343,7 +343,6 @@ class RegisterView(FormView):
     template_name = 'registration/register.html'
     form_class = UserCreationForm
     success_url = reverse_lazy('student_list')
-
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
@@ -580,14 +579,40 @@ class ClassDetailView(LoginRequiredMixin, DetailView):
         
         return context
 
+class MessageListView(LoginRequiredMixin, ListView):
+    model = SendMessage
+    template_name = 'message_list.html'
+    context_object_name = 'messages'
+    paginate_by = 10
+    ordering = ['-time']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get('search', '')
+        if search_query:
+            queryset = queryset.filter(
+                Q(message__icontains=search_query) |
+                Q(groups__group_name__icontains=search_query)
+            ).distinct()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('search', '')
+        context['active_page'] = 'message_list'
+        return context
+
 @login_required
 @csrf_protect
 def send_message_view(request):
     groups = TelegramGroup2.objects.filter(is_active=True)
+    messages_history = SendMessage.objects.all().order_by('-time')[:5]
     
     if request.method == 'POST':
         message_text = request.POST.get('message')
         image = request.FILES.get('image')
+        selected_groups = request.POST.getlist('groups')
+        all_groups = request.POST.get('all_groups') == 'on'
         
         if not message_text and not image:
             messages.error(request, 'Необходимо указать сообщение или загрузить изображение')
@@ -596,20 +621,25 @@ def send_message_view(request):
         try:
             message_obj = SendMessage(
                 message=message_text,
-                image=image if image else None
+                image=image if image else None,
+                all_groups=all_groups
             )
             message_obj.save()
+            
+            if not all_groups and selected_groups:
+                message_obj.groups.set(selected_groups)
             
             # Отправляем сообщение через бота
             send_notification(message_obj)
             
-            messages.success(request, 'Сообщение успешно отправлено во все активные группы!')
+            messages.success(request, 'Сообщение успешно отправлено!')
             return redirect('send_message')
         except Exception as e:
             messages.error(request, f'Ошибка при отправке сообщения: {str(e)}')
     
     context = {
         'groups': groups,
-        'active_page': 'send_message'  # Для подсветки активного пункта меню
+        'messages_history': messages_history,
+        'active_page': 'send_message'
     }
     return render(request, 'send_message.html', context)

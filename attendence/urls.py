@@ -26,4 +26,5 @@ urlpatterns = [
     path('class/<int:class_id>/students/', ClassStudentManageView.as_view(), name='class_students'),
     path('translate/', TranslateView.as_view(), name='translate'),
     path('send-message/', send_message_view, name='send_message'),
+    path('messages/', MessageListView.as_view(), name='message_list'),
 ]

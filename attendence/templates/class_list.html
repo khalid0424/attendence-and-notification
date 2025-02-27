@@ -82,11 +82,11 @@
                     {% endif %}
                 </div>
                 <div class="card-footer">
-                    <div class="btn-group w-100">
-                        <a href="{% url 'class_detail' class.id %}" class="btn btn-info">Детали</a>
-                        <a href="{% url 'class_update' class.id %}" class="btn btn-primary">Изменить</a>
-                        <a href="{% url 'class_delete' class.id %}" class="btn btn-danger">Удалить</a>
-                        <a href="{% url 'class_students' class.id %}" class="btn btn-success">Студенты</a>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{% url 'class_detail' class.id %}" class="btn btn-info flex-fill">Детали</a>
+                        <a href="{% url 'class_update' class.id %}" class="btn btn-primary flex-fill">Изменить</a>
+                        <a href="{% url 'class_delete' class.id %}" class="btn btn-danger flex-fill">Удалить</a>
+                        <a href="{% url 'class_students' class.id %}" class="btn btn-success flex-fill">Студенты</a>
                     </div>
                 </div>
             </div>

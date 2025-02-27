@@ -88,7 +88,6 @@ class TelegramGroup(models.Model):
         return f"{self.group_name} ({self.group_id})"
 
 
-
 class TelegramGroup2(models.Model):
     group_id = models.CharField(max_length=150, unique=True)
     group_name = models.CharField(max_length=200, null=True, blank=True)
@@ -102,8 +101,21 @@ class TelegramGroup2(models.Model):
 class SendMessage(models.Model):
     image = models.ImageField(upload_to='static/images', null=True, blank=True)
     message = models.TextField(null=True, blank=True)
-    time = models.DateTimeField(auto_now=True, auto_now_add=False)
-    chat_id = models.CharField(max_length=250, null=True, blank=True)
+    time = models.DateTimeField(auto_now_add=True)
+    groups = models.ManyToManyField(TelegramGroup2, blank=True, related_name='messages')
+    all_groups = models.BooleanField(default=False, help_text='Отправить всем группам')
+    status = models.CharField(max_length=20, choices=[
+        ('pending', 'В ожидании'),
+        ('sent', 'Отправлено'),
+        ('failed', 'Ошибка')
+    ], default='pending')
+    sent_at = models.DateTimeField(null=True, blank=True)
+    error_message = models.TextField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-time']
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
 
     def __str__(self):
-        return f"{self.id}"
+        return f"Message {self.id} ({self.status})"

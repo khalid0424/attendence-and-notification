@@ -14,6 +14,73 @@
             background: linear-gradient(135deg, #e3f2fd, #bbdefb, #90caf9);
             position: relative;
             overflow-x: hidden;
+            padding-left: 250px; /* Добавляем отступ для сайдбара */
+        }
+
+        /* Боковая навигация */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 4px 0 15px rgba(33, 150, 243, 0.1);
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(144, 202, 249, 0.2);
+        }
+
+        .sidebar-brand {
+            color: #1976d2;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .nav-item {
+            margin: 5px 15px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: #1976d2;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            background: rgba(33, 150, 243, 0.1);
+            color: #1565c0;
+        }
+
+        .nav-link.active {
+            background: #1976d2;
+            color: white !important;
         }
 
         /* Анимированный фон */
@@ -49,48 +116,7 @@
             opacity: 0.5;
         }
 
-        /* Стили компонентов */
-        .navbar {
-            background: rgba(255, 255, 255, 0.9) !important;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 30px rgba(33, 150, 243, 0.1);
-            border-bottom: 1px solid rgba(144, 202, 249, 0.2);
-            animation: slideDown 0.5s ease-out;
-            position: relative;
-            z-index: 1050;
-        }
-
-        .dropdown-menu {
-            z-index: 1051;
-            background: rgba(255, 255, 255, 0.98);
-            border: 1px solid rgba(33, 150, 243, 0.1);
-            box-shadow: 0 4px 20px rgba(33, 150, 243, 0.15);
-            backdrop-filter: blur(10px);
-        }
-
-        .dropdown-item {
-            color: #1976d2;
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-item:hover {
-            background: rgba(33, 150, 243, 0.1);
-            color: #1565c0;
-        }
-
-        .navbar-brand, .nav-link {
-            color: #1976d2 !important;
-            font-weight: 500;
-        }
-
-        .nav-link:hover {
-            color: #1565c0 !important;
-        }
-
-        .navbar-toggler {
-            border-color: rgba(25, 118, 210, 0.2);
-        }
-
+        /* Стили для карточек и форм */
         .card {
             background: rgba(255, 255, 255, 0.95);
             border: none;
@@ -98,274 +124,73 @@
             backdrop-filter: blur(8px);
             transition: all 0.3s ease;
             animation: fadeInUp 0.5s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
-            position: relative;
-            z-index: 1;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(33, 150, 243, 0.15);
+            margin-bottom: 10px;
         }
 
         .table {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(33, 150, 243, 0.1);
-            backdrop-filter: blur(8px);
-            animation: fadeIn 0.5s ease-out forwards;
-            opacity: 0;
+            margin-bottom: 10px;
         }
 
-        .table thead {
-            background: #f8f9fa;
+        .form-group {
+            margin-bottom: 10px;
         }
 
-        .table tbody tr {
-            transition: background-color 0.3s ease;
-        }
-
-        .table tbody tr:hover {
-            background: rgba(33, 150, 243, 0.05);
-        }
-
-        /* Стили для кнопок */
-        .btn-primary {
-            background-color: #2196f3;
-            border-color: #2196f3;
-            box-shadow: 0 2px 5px rgba(33, 150, 243, 0.2);
-        }
-
-        .btn-primary:hover {
-            background-color: #1976d2;
-            border-color: #1976d2;
-            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
-        }
-
-        /* Стили для селектора языка */
-        #languageSelector {
-            background: rgba(255, 255, 255, 0.9);
-            color: #1976d2;
-            border: 1px solid rgba(33, 150, 243, 0.2);
-            padding: 5px 10px;
-            border-radius: 5px;
-            backdrop-filter: blur(5px);
+        /* Контент */
+        .main-content {
+            padding: 10px;
+            margin-left: 130px; /* Уменьшаем левый отступ еще на 20px */
+            margin-right: 20px;
             transition: all 0.3s ease;
         }
 
-        #languageSelector:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: rgba(33, 150, 243, 0.4);
+        /* Контейнер внутри main-content */
+        .main-content .container {
+            max-width: 100%;
+            width: 100%;
+            padding-right: 5px;
+            padding-left: 0; /* Убираем левый padding */
+            margin: 0; /* Убираем все отступы */
         }
 
-        #languageSelector option {
-            background-color: white;
-            color: #1976d2;
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            body {
+                padding-left: 0;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-right: 0;
+                padding: 10px;
+            }
+
+            .main-content .container {
+                padding: 0;
+            }
         }
 
-        /* Стили для кнопок */
-        .btn {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: rgba(255,255,255,0.1);
-            transform: translate(-50%, -50%) scale(0);
-            border-radius: 50%;
-            transition: transform 0.6s ease;
-        }
-
-        .btn:hover::after {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .btn-secondary {
-            background: rgba(156, 39, 176, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(156, 39, 176, 1);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-danger {
-            background-color: #e74a3b;
-            border-color: #e74a3b;
-        }
-
-        .btn-danger:hover {
-            background-color: #be2617;
-            border-color: #be2617;
-        }
-
-        /* Глобальные стили для полей ввода */
-        input.form-control,
-        select.form-select,
-        textarea.form-control {
-            color: #212529 !important;
-            background-color: #fff !important;
-        }
-
-        .form-control::placeholder,
-        .form-select::placeholder {
-            color: #6c757d !important;
-            opacity: 0.8;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            color: #212529 !important;
-            background-color: #fff !important;
-            border-color: #86b7fe;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        }
-
-        /* Стили для модальных окон */
-        .modal-content input.form-control,
-        .modal-content select.form-select,
-        .modal-content textarea.form-control {
-            color: #212529 !important;
-            background-color: #fff !important;
-        }
-
-        /* Стили для темного фона */
-        .bg-dark input.form-control,
-        .bg-dark select.form-select,
-        .bg-dark textarea.form-control {
-            color: #212529 !important;
-            background-color: #fff !important;
-        }
-
-        /* Стили для форм */
-        .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            backdrop-filter: blur(5px);
-        }
-
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
-        }
-
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Модальные окна */
-        .modal-content {
-            background: rgba(25, 118, 210, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #e3f2fd;
-        }
-
-        .modal-header {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(25, 118, 210, 0.2);
-        }
-
-        .modal-footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(25, 118, 210, 0.2);
-        }
-
-        /* Анимации */
         @keyframes wave {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Добавляем задержку для последовательного появления карточек */
-        .card:nth-child(1) { animation-delay: 0.1s; }
-        .card:nth-child(2) { animation-delay: 0.2s; }
-        .card:nth-child(3) { animation-delay: 0.3s; }
-        .card:nth-child(4) { animation-delay: 0.4s; }
-        .card:nth-child(5) { animation-delay: 0.5s; }
-
-        .nav-item.me-3 {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Стили для иконок в кнопках */
-        .btn-icon {
-            width: 35px;
-            height: 35px;
-            padding: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            margin: 0 3px;
-        }
-
-        .btn-icon i {
-            font-size: 1rem;
-        }
-
-        .btn-update {
-            background-color: #4caf50;
-            border-color: #4caf50;
-            color: white;
-        }
-
-        .btn-update:hover {
-            background-color: #388e3c;
-            border-color: #388e3c;
-            color: white;
-        }
-
-        .btn-delete {
-            background-color: #f44336;
-            border-color: #f44336;
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background-color: #d32f2f;
-            border-color: #d32f2f;
-            color: white;
         }
     </style>
 </head>
@@ -375,144 +200,105 @@
         <div class="wave"></div>
         <div class="wave"></div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{% url "student_list" %}">Учет посещаемости</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'student_list' %}">Студенты</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'attendance_list' %}">Посещаемость</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'class_list' %}">Классы</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'send_message' %}">Отправка сообщений</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    {% comment %} <li class="nav-item me-3">
-                        <select class="form-select" id="languageSelector" onchange="translatePage(this.value)">
-                            <option value="ru">Русский</option>
-                            <option value="tg">Тоҷикӣ</option>
-                            <option value="en">English</option>
-                        </select>
-                    </li> {% endcomment %}
-                    {% if user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-2"></i>
-                            {{ user.username }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" href="{% url 'profile' %}">
-                                    <i class="fas fa-user-circle me-2"></i>
-                                    Профиль
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item text-danger" href="{% url 'logout' %}">
-                                    <i class="fas fa-sign-out-alt me-2"></i>
-                                    Выйти
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">
-                            <i class="fas fa-sign-in-alt me-1"></i>
-                            Войти
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">
-                            <i class="fas fa-user-plus me-1"></i>
-                            Регистрация
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
+
+    <!-- Боковая навигация -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <a href="{% url 'profile' %}" class="sidebar-brand">
+                <i class="fas fa-graduation-cap"></i>
+                Учет посещаемости
+            </a>
         </div>
+        <ul class="nav-menu">
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{% url 'profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                        <i class="fas fa-user"></i>
+                        Профиль
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'student_list' %}" class="nav-link {% if request.resolver_match.url_name == 'student_list' %}active{% endif %}">
+                        <i class="fas fa-users"></i>
+                        Студенты
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'attendance_list' %}" class="nav-link {% if request.resolver_match.url_name == 'attendance_list' %}active{% endif %}">
+                        <i class="fas fa-clipboard-check"></i>
+                        Посещаемость
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'class_list' %}" class="nav-link {% if request.resolver_match.url_name == 'class_list' %}active{% endif %}">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        Классы
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'send_message' %}" class="nav-link {% if request.resolver_match.url_name == 'send_message' %}active{% endif %}">
+                        <i class="fas fa-envelope"></i>
+                        Отправка сообщений
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Выход
+                    </a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a href="{% url 'login' %}" class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Вход
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'register' %}" class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}">
+                        <i class="fas fa-user-plus"></i>
+                        Регистрация
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
     </nav>
 
-    <div class="container mt-3">
-        {% if messages %}
+    <!-- Основной контент -->
+    <div class="main-content">
+        {% comment %} {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show animate__animated animate__fadeIn" role="alert">
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
-        {% endif %}
-        {% block content %}{% endblock %}
+        {% endif %} {% endcomment %}
+        
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    {% block extra_js %}
-    <!-- JavaScript для перевода -->
     <script>
-        {% comment %} function translatePage(lang) {
-            // Получаем все текстовые элементы
-            const elements = document.querySelectorAll('a, h1, h2, h3, h4, h5, p, span, button, label, option');
-            
-            elements.forEach(element => {
-                const text = element.innerText.trim();
-                if (text && !element.getAttribute('data-original')) {
-                    element.setAttribute('data-original', text);
-                }
-                
-                // Пропускаем перевод, если это селектор языка
-                if (element.closest('#languageSelector')) {
-                    return;
-                }
-                
-                // Получаем оригинальный текст
-                const originalText = element.getAttribute('data-original') || text;
-                
-                // Отправляем запрос на перевод
-                fetch('{% url "translate" %}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    body: `text=${encodeURIComponent(originalText)}&lang=${lang}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.translated) {
-                        element.innerText = data.translated;
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        }
-        
-        // Сохраняем выбранный язык в localStorage
-        document.getElementById('languageSelector').addEventListener('change', function(e) {
-            localStorage.setItem('selectedLanguage', e.target.value);
-        });
-        
-        // Восстанавливаем выбранный язык при загрузке страницы
+        // Для мобильной версии
         document.addEventListener('DOMContentLoaded', function() {
-            const savedLanguage = localStorage.getItem('selectedLanguage');
-            if (savedLanguage) {
-                document.getElementById('languageSelector').value = savedLanguage;
-                translatePage(savedLanguage);
-            }
+            const toggleButton = document.createElement('button');
+            toggleButton.classList.add('btn', 'btn-primary', 'd-md-none');
+            toggleButton.style.position = 'fixed';
+            toggleButton.style.top = '10px';
+            toggleButton.style.left = '10px';
+            toggleButton.style.zIndex = '1001';
+            toggleButton.innerHTML = '<i class="fas fa-bars"></i>';
+            
+            document.body.appendChild(toggleButton);
+            
+            toggleButton.addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
         });
-    </script> {% endcomment %}
-    {% endblock %}
+    </script>
 </body>
 </html>
